@@ -5,7 +5,14 @@ import { ButtonPickle } from './style';
 export const Button = ({ onClick, modifier = '', disabled }) => {
   const lado = disabled ? (modifier === 'prev' ? '3' : '4') : modifier === 'prev' ? '' : '2';
 
-  return <ButtonPickle src={`/assets/pickle${lado}.png`} alt="Botão" onClick={onClick} $disabled={disabled} />;
+  return (
+    <ButtonPickle
+      src={`/RickAndMortyCharacter/assets/pickle${lado}.png`}
+      alt="Botão"
+      onClick={onClick}
+      $disabled={disabled}
+    />
+  );
 };
 
 Button.propTypes = {

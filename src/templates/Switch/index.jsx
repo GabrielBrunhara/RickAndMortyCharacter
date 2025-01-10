@@ -10,7 +10,7 @@ const StyledSwitchWrapper = styled.div`
 
   .form-check-input {
     background-color: white;
-    background-image: url('/assets/portal.png');
+    background-image: url('/RickAndMortyCharacter/assets/portal.png');
     transform: scale(1.5);
     border-color: white;
   }
