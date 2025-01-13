@@ -1,87 +1,63 @@
-import { motion } from 'framer-motion';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 
-export const apear = keyframes`
-  from{
-    transform: translateY(100px);
-    opacity: 0;
-  }
-  to{
-    transform: translateY(0);
-    opacity: 1;
-  }
-`;
-
-export const Navbar = styled(motion.nav)`
-  width: 100%;
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: var(--accent);
-  color: var(--primary);
+export const Navbar = styled.nav`
   position: fixed;
   top: 0;
-  box-sizing: border-box;
-  padding-left: 50px;
-  padding-right: 20px;
-
-  overflow: hidden;
+  width: auto;
+  height: 100%;
+  display: ${({ $isChecked }) => ($isChecked ? 'flex;' : 'none')};
+  flex-direction: column;
+  align-items: center;
+  justify-content: start;
+  padding: 0px;
   z-index: 1000;
-
-  @media (min-width: 1630px) {
-    padding-inline: 150px;
-  }
-
-  @media (max-width: 848px) {
-    overflow: visible;
-    padding-inline: 30px;
-    height: 60px;
-  }
-`;
-
-export const ListName = styled.ul`
-  list-style: none;
-  display: flex;
-  align-items: center;
-  gap: 50px;
-  padding: 0;
-  margin: 0;
-`;
-
-export const Name = styled.li`
-  display: flex;
-  align-items: center;
-  gap: 0px;
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-right: auto;
-
-  img {
-    margin-left: 20px;
-    animation: ${apear} linear forwards 3s;
-    &:hover {
-      filter: drop-shadow(0px 0px 10px rgb(30, 255, 0));
-    }
-    @media (max-width: 848px) {
-      width: 50px;
-    }
-  }
-
-  @media (max-width: 762px) {
-    a {
-      font-size: 15px;
-      padding: 0;
-      margin-left: 10px;
-    }
-  }
 `;
 
 export const List = styled.ul`
+  background-color: var(--primary);
+  border-right: solid 2px var(--accent);
+  color: var(--text);
+  min-width: 300px;
+  height: 100%;
+  justify-content: start;
   list-style: none;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 35px;
-  padding: 10px 2.5px;
+  gap: 40px;
+  padding-top: 70px;
+  padding-inline: 30px;
   margin: 0;
+
+  svg {
+    &:hover {
+      fill: white;
+    }
+  }
+`;
+
+export const FilterBox = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid var(--accent);
+  border-radius: 5px;
+  background-color: var(--background);
+  color: var(--text);
+  width: 100%;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  select {
+    padding: 5px;
+    border: 1px solid var(--accent);
+    border-radius: 5px;
+    background-color: var(--background);
+    color: var(--text);
+  }
 `;

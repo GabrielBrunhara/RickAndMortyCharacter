@@ -1,5 +1,7 @@
 import P from 'prop-types';
 import { IoSkull } from 'react-icons/io5';
+import { FaHeartbeat } from 'react-icons/fa';
+import { MdOutlineQuestionMark } from 'react-icons/md';
 
 import * as Styled from './style';
 
@@ -7,9 +9,15 @@ export const PostCard = ({ id, name, status, species, type, gender, origin, loca
   return (
     <Styled.PostCardWrapper $gender={gender} $singleCharacter={singleCharacter}>
       <img src={image} alt={name} />
+      {status === 'Dead' ? (
+        <IoSkull size={25} color="var(--accent)" />
+      ) : status === 'Alive' ? (
+        <FaHeartbeat size={25} color="var(--accent)" />
+      ) : (
+        <MdOutlineQuestionMark size={25} color="var(--accent)" />
+      )}
       <Styled.PostCardContent>
         <h2> {name} </h2>
-        {status === 'Dead' && <IoSkull size={25} color="var(--accent)" />}
         <p>
           <strong>{location}</strong>
         </p>

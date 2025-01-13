@@ -6,7 +6,7 @@ export const lightTheme = {
 };
 
 export const darkTheme = {
-  primary: '#1e1e2c',
+  primary: 'rgb(24, 24, 24)',
   secondary: '#2B2D42',
   text: 'white',
   secondaryText: '#cecece',

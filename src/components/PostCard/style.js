@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 export const PostCardWrapper = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
-  background: var(--secondary);
+  border: solid 2px var(--accent);
   color: var(--text);
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.548);
@@ -12,8 +13,20 @@ export const PostCardWrapper = styled.div`
   justify-content: start;
   width: ${({ $singleCharacter }) => ($singleCharacter ? '30%' : '15%')};
   margin-block: 30px;
+  margin-inline: 10px;
 
+  svg {
+    position: absolute;
+    left: 3%;
+    top: 2%;
+
+    @media (max-width: 1064px) {
+      left: 1%;
+      top: 4%;
+    }
+  }
   &:hover {
+    border: solid 2px var(--text);
     transform: translateY(-10px);
     box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.637);
   }

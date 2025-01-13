@@ -1,5 +1,12 @@
+import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi';
+import { IoClose } from 'react-icons/io5';
+import { LuListFilter } from 'react-icons/lu';
 import { ThemeProvider } from 'styled-components';
 import { useCallback, useEffect, useState } from 'react';
+
+import rickPng from '/assets/logoDark.png';
+import rickPng2 from '/assets/logoLight.png';
+import rickSvg from '/assets/title.svg';
 
 // Estilos
 import * as Styled from './style';
@@ -17,10 +24,12 @@ import { loadCharacters } from '../../utils/load-posts';
 
 export const Home = () => {
   // Estados
+  const [isChecked, setIsChecked] = useState(false);
   const [dark, setDark] = useState(true);
   const [allCharacters, setAllCharacters] = useState([]);
-  const [page, setPage] = useState(0); // Página atual
-  const [charactersPerPage] = useState(5); // Número de personagens por página
+  const [characters, setCharacters] = useState([]);
+  const [page, setPage] = useState(0);
+  const [charactersPerPage] = useState(5);
   const [searchValue, setSearchValue] = useState('');
   const [isLoading, setIsLoading] = useState(true);
 
@@ -29,11 +38,11 @@ export const Home = () => {
 
   // Filtro e paginação
   // Filtra personagens baseados no valor de busca ou exibe todos
-  const allFilteredCharacters = searchValue
+  let allFilteredCharacters = searchValue
     ? isNaN(searchValue)
-      ? allCharacters.filter((character) => character.name.toLowerCase().includes(searchValue.toLowerCase()))
-      : allCharacters.filter((character) => character.id === Number(searchValue))
-    : allCharacters;
+      ? characters.filter((character) => character.name.toLowerCase().includes(searchValue.toLowerCase()))
+      : characters.filter((character) => character.id === Number(searchValue))
+    : characters;
 
   // Pagina os resultados filtrados com base na página atual
   const currentCharacters = allFilteredCharacters.slice(page, page + charactersPerPage);
@@ -42,6 +51,22 @@ export const Home = () => {
   const noMorePages = page + charactersPerPage >= allFilteredCharacters.length;
 
   // Funções de Manipulação
+
+  const updateFilters = (filters) => {
+    let filteredCharacters = allCharacters;
+
+    // Itera sobre cada filtro e aplica
+    Object.keys(filters).forEach((filterType) => {
+      const activeFilters = filters[filterType];
+      if (activeFilters.length > 0) {
+        filteredCharacters = filteredCharacters.filter((character) =>
+          activeFilters.includes(character[filterType].toLowerCase()),
+        );
+      }
+    });
+
+    setCharacters(filteredCharacters);
+  };
 
   //inicializa o tema
   const initializePreferences = () => {
@@ -59,6 +84,7 @@ export const Home = () => {
     setIsLoading(true);
     const allLoadedCharacters = await loadCharacters();
     setAllCharacters(allLoadedCharacters);
+    setCharacters(allLoadedCharacters);
     setIsLoading(false);
   }, []);
 
@@ -84,13 +110,14 @@ export const Home = () => {
 
   // Tema aleatório ou resetado
   const handleRandom = (random) => {
+    setPage(0);
+    setCharacters(allCharacters);
     if (random) {
       const randomId = Math.floor(Math.random() * allCharacters.length);
       setSearchValue(randomId);
     } else {
       window.scrollTo(0, 0);
       setSearchValue('');
-      setPage(0);
     }
   };
 
@@ -111,15 +138,30 @@ export const Home = () => {
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       {/* Navbar */}
-      <Navbar handleRandom={handleRandom} handleThemeToggle={handleThemeToggle} dark={dark} />
+      <Navbar updateFilters={updateFilters} handleThemeToggle={handleThemeToggle} dark={dark} isChecked={isChecked} />
       <Styled.Container>
+        <Styled.Menu>
+          <Styled.ToggleMenu $isChecked={isChecked}>
+            <label htmlFor="toggle">
+              {isChecked ? (
+                <IoClose size={45} color="var(--accent)" />
+              ) : (
+                <LuListFilter size={45} color="var(--accent)" />
+              )}
+            </label>
+            <input type="checkbox" id="toggle" checked={isChecked} onChange={(e) => setIsChecked(e.target.checked)} />
+          </Styled.ToggleMenu>
+          <button onClick={() => handleRandom(true)}>
+            <GiPerspectiveDiceSixFacesRandom size={55} color="var(--accent)" />
+          </button>
+        </Styled.Menu>
+        <Styled.Logo onClick={() => handleRandom(false)}>
+          <img src="/RickAndMortyCharacter/assets/portal.png" alt="R&M Portal" width="160" className="portal" />
+          <img src={dark ? rickPng : rickPng2} alt="logo" width="90" className="logo" />
+          <img src={rickSvg} alt="logo" width="160" className="title" />
+        </Styled.Logo>
         {/* Barra de Pesquisa */}
-        <Search
-          placeholder="Search characters"
-          value={searchValue}
-          onChange={handleChange}
-          onFocus="Type something..."
-        />
+        <Search placeholder="Search" value={searchValue} onChange={handleChange} onFocus="Type something..." />
 
         {/* Conteúdo Principal */}
         {isLoading ? (

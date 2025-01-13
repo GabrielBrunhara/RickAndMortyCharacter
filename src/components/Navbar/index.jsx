@@ -1,58 +1,144 @@
-import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi';
-import { useRef, useState } from 'react';
-import { useMotionValueEvent, useScroll } from 'framer-motion';
-/* import { Link } from 'react-router-dom'; */
-
-import rickSvg from '/assets/logoDark.png';
-import rickSvg2 from '/assets/logoLight.png';
-
+import { useState } from 'react';
 import P from 'prop-types';
 
 import * as Styled from './style';
-import Switch from '../../templates/Switch';
 
-const Navbar = ({ handleRandom, handleThemeToggle, dark }) => {
-  const [isVisible, setIsVisible] = useState(true);
-  const { scrollY } = useScroll();
-  const navbarRef = useRef(null);
-
-  useMotionValueEvent(scrollY, 'change', (current) => {
-    const previous = scrollY.getPrevious();
-    const direction = current > previous ? 'down' : 'up';
-    setIsVisible(direction === 'up');
+const Navbar = ({ updateFilters, isChecked }) => {
+  const [deadFilter, setDeadFilter] = useState({
+    alive: false,
+    dead: false,
+    unknown: false,
   });
 
+  const [genderFilter, setGenderFilter] = useState({
+    male: false,
+    female: false,
+    genderless: false,
+    unknown: false,
+  });
+
+  // Função para combinar os filtros e atualizar a lista de filtros
+  const handleCheckboxChange = (event) => {
+    const { value, checked, name } = event.target;
+
+    if (name === 'status') {
+      // Atualiza o filtro de status (vivo, morto, unknown)
+      setDeadFilter((prevState) => {
+        const newFilter = { ...prevState, [value]: checked };
+        const activeStatusFilters = Object.keys(newFilter).filter((key) => newFilter[key]);
+        // Passa o filtro de status para o updateFilters
+        updateFilters({
+          status: activeStatusFilters,
+          gender: Object.keys(genderFilter).filter((key) => genderFilter[key]),
+        });
+        return newFilter;
+      });
+    } else if (name === 'gender') {
+      // Atualiza o filtro de gênero (male, female, other)
+      setGenderFilter((prevState) => {
+        const newFilter = { ...prevState, [value]: checked };
+        const activeGenderFilters = Object.keys(newFilter).filter((key) => newFilter[key]);
+        // Passa o filtro de gênero para o updateFilters
+        updateFilters({
+          gender: activeGenderFilters,
+          status: Object.keys(deadFilter).filter((key) => deadFilter[key]),
+        });
+        return newFilter;
+      });
+    }
+  };
+
   return (
-    <Styled.Navbar
-      ref={navbarRef}
-      initial={{ y: 0 }}
-      animate={{ y: isVisible ? 0 : '-100%' }}
-      transition={{ type: 'tween', duration: 0.5 }}
-    >
-      <Styled.ListName>
-        <Styled.Name>
-          <Switch handleThemeToggle={handleThemeToggle} dark={dark} />
-          <img src={dark ? rickSvg : rickSvg2} alt="logo" width="80" />
-          <a href="#about" onClick={() => handleRandom(false)}>
-            Rick & Morty
-          </a>
-        </Styled.Name>
-      </Styled.ListName>
+    <Styled.Navbar $isChecked={isChecked}>
       <Styled.List>
-        <li>
-          <a href="#about" onClick={() => handleRandom(true)}>
-            <GiPerspectiveDiceSixFacesRandom size={45} />
-          </a>
-        </li>
+        <h2>Filters</h2>
+        {/* Filtro 1: Status (Vivos, Mortos e Unknown) */}
+        <Styled.FilterBox>
+          <h3>Status</h3>
+          <label>
+            <input
+              type="checkbox"
+              name="status"
+              value="alive"
+              checked={deadFilter.alive}
+              onChange={handleCheckboxChange}
+            />
+            Alive
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="status"
+              value="dead"
+              checked={deadFilter.dead}
+              onChange={handleCheckboxChange}
+            />
+            Dead
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="status"
+              value="unknown"
+              checked={deadFilter.unknown}
+              onChange={handleCheckboxChange}
+            />
+            Unknown
+          </label>
+        </Styled.FilterBox>
+
+        {/* Filtro 2: Gênero (Male, Female, Other) */}
+        <Styled.FilterBox>
+          <h3>Gender</h3>
+          <label>
+            <input
+              type="checkbox"
+              name="gender"
+              value="male"
+              checked={genderFilter.male}
+              onChange={handleCheckboxChange}
+            />
+            Male
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="gender"
+              value="female"
+              checked={genderFilter.female}
+              onChange={handleCheckboxChange}
+            />
+            Female
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="gender"
+              value="genderless"
+              checked={genderFilter.genderless}
+              onChange={handleCheckboxChange}
+            />
+            Genderless
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              name="gender"
+              value="unknown"
+              checked={genderFilter.unknown}
+              onChange={handleCheckboxChange}
+            />
+            Unknown
+          </label>
+        </Styled.FilterBox>
       </Styled.List>
     </Styled.Navbar>
   );
 };
 
 Navbar.propTypes = {
-  handleRandom: P.func.isRequired,
-  handleThemeToggle: P.func.isRequired,
-  dark: P.bool.isRequired,
+  updateFilters: P.func.isRequired,
+  isChecked: P.bool.isRequired,
 };
 
 export default Navbar;

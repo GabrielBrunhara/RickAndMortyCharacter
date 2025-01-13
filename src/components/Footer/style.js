@@ -19,4 +19,8 @@ export const Content = styled.div`
     color: var(--text);
     margin: 0;
   }
+
+  a {
+    text-decoration: none;
+  }
 `;
