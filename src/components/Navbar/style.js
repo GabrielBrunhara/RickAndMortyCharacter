@@ -1,11 +1,12 @@
+import { motion } from 'framer-motion';
 import styled from 'styled-components';
 
-export const Navbar = styled.nav`
+export const Navbar = styled(motion.nav)`
   position: fixed;
   top: 0;
   width: auto;
   height: 100%;
-  display: ${({ $isChecked }) => ($isChecked ? 'flex;' : 'none')};
+  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: start;
@@ -14,38 +15,39 @@ export const Navbar = styled.nav`
 `;
 
 export const List = styled.ul`
-  background-color: var(--primary);
+  overflow: auto;
+  background-color: transparent;
+  backdrop-filter: blur(0.5rem);
   border-right: solid 2px var(--accent);
   color: var(--text);
-  min-width: 300px;
+  width: fit-content;
   height: 100%;
   justify-content: start;
   list-style: none;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 40px;
-  padding-top: 70px;
-  padding-inline: 30px;
+  align-items: left;
+  gap: 10px;
+  padding: 30px;
   margin: 0;
 
   svg {
     &:hover {
-      fill: white;
+      fill: var(--text);
     }
   }
 `;
 
 export const FilterBox = styled.div`
+  background-color: var(--primary);
   display: flex;
   flex-direction: column;
   gap: 10px;
   padding: 10px;
   border: 1px solid var(--accent);
   border-radius: 5px;
-  background-color: var(--background);
   color: var(--text);
-  width: 100%;
+  width: 200px;
 
   label {
     display: flex;
@@ -53,11 +55,42 @@ export const FilterBox = styled.div`
     gap: 5px;
   }
 
-  select {
-    padding: 5px;
-    border: 1px solid var(--accent);
-    border-radius: 5px;
-    background-color: var(--background);
-    color: var(--text);
+  input[type='checkbox'] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    border: 2px solid var(--accent);
+    background-color: transparent;
+    border-radius: 4px;
+    cursor: pointer;
   }
+
+  input[type='checkbox']:checked {
+    background-color: var(--accent);
+  }
+
+  select {
+    padding: 8px;
+    font-size: 14px;
+    border: 2px solid var(--accent);
+    border-radius: 5px;
+    background-color: var(--primary);
+    color: var(--text);
+    outline: none;
+    width: 100%;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+
+    &:hover {
+      border-color: var(--text);
+    }
+  }
+`;
+
+export const Top = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;

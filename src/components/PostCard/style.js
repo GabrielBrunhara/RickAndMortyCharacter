@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 export const PostCardWrapper = styled.div`
+  background-color: transparent;
+  backdrop-filter: blur(0.5rem);
   position: relative;
   display: flex;
   flex-direction: column;
   border: solid 2px var(--accent);
   color: var(--text);
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.548);
   transition: transform 100ms ease-in-out;
   text-align: center;
   align-items: center;
@@ -26,9 +27,12 @@ export const PostCardWrapper = styled.div`
     }
   }
   &:hover {
-    border: solid 2px var(--text);
     transform: translateY(-10px);
-    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.637);
+    border: solid 2px var(--text);
+
+    svg {
+      fill: var(--text);
+    }
   }
 
   img {

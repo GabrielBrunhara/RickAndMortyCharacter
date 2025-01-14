@@ -4,30 +4,26 @@ import P from 'prop-types';
 
 const StyledSwitchWrapper = styled.div`
   cursor: pointer;
-
+  transform: translateX(10px);
   align-items: center;
   padding: 0px;
 
   .form-check-input {
-    background-color: white;
+    background-color: var(--primary);
+    border-color: var(--accent);
     background-image: url('/RickAndMortyCharacter/assets/portal.png');
-    transform: scale(1.5);
-    border-color: white;
+    transform: scale(1.8);
   }
 
   .form-check-input:focus {
     box-shadow: none;
   }
 
-  .form-check-input:checked {
-    background-color: #1e1e2c;
-    border-color: #1e1e2c;
-  }
   @media (max-width: 848px) {
     top: 17px;
     left: 20px;
     .form-check-input {
-      transform: scale(1.1);
+      transform: scale(1.5);
     }
   }
 `;

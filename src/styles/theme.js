@@ -1,13 +1,11 @@
 export const lightTheme = {
   primary: 'white',
-  secondary: '#cecece',
-  text: '#1e1e2c',
+  text: 'rgb(0, 4, 19)',
   secondaryText: '#2B2D42',
 };
 
 export const darkTheme = {
-  primary: 'rgb(24, 24, 24)',
-  secondary: '#2B2D42',
+  primary: 'rgb(0, 4, 19)',
   text: 'white',
   secondaryText: '#cecece',
 };

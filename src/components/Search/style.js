@@ -1,7 +1,7 @@
 import Styled from 'styled-components';
 
 export const InputSearch = Styled.input`
-  background-color: var(--primary);
+  background-color: transparent;
   color: var(--text);
   text-align: center;
   width: 75%;

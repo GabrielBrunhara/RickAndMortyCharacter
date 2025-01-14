@@ -37,3 +37,32 @@ export const loadCharacters = async () => {
 
   return allCharacters; // Retorna todos os personagens
 };
+
+export const loadLocations = async () => {
+  const apiUrl = 'https://rickandmortyapi.com/api/location';
+
+  let allLocations = [];
+  let nextPage = apiUrl;
+
+  while (nextPage) {
+    const response = await fetch(nextPage);
+    if (!response.ok) {
+      throw new Error(`Erro ao buscar dados: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    allLocations = allLocations.concat(
+      data.results
+        .filter((location) => location.residents.length > 0)
+        .map((location) => ({
+          id: location.id,
+          name: location.name,
+        })),
+    );
+
+    nextPage = data.info.next;
+  }
+
+  return allLocations;
+};

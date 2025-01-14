@@ -1,12 +1,5 @@
-import { GiPerspectiveDiceSixFacesRandom } from 'react-icons/gi';
-import { IoClose } from 'react-icons/io5';
-import { LuListFilter } from 'react-icons/lu';
 import { ThemeProvider } from 'styled-components';
 import { useCallback, useEffect, useState } from 'react';
-
-import rickPng from '/assets/logoDark.png';
-import rickPng2 from '/assets/logoLight.png';
-import rickSvg from '/assets/title.svg';
 
 // Estilos
 import * as Styled from './style';
@@ -20,7 +13,8 @@ import { Loading } from '../../components/Loading';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 // Utilitários
-import { loadCharacters } from '../../utils/load-posts';
+import { loadCharacters, loadLocations } from '../../utils/load-posts';
+import Menu from '../../components/Menu';
 
 export const Home = () => {
   // Estados
@@ -28,6 +22,7 @@ export const Home = () => {
   const [dark, setDark] = useState(true);
   const [allCharacters, setAllCharacters] = useState([]);
   const [characters, setCharacters] = useState([]);
+  const [locations, setLocations] = useState([]);
   const [page, setPage] = useState(0);
   const [charactersPerPage] = useState(5);
   const [searchValue, setSearchValue] = useState('');
@@ -58,7 +53,14 @@ export const Home = () => {
     // Itera sobre cada filtro e aplica
     Object.keys(filters).forEach((filterType) => {
       const activeFilters = filters[filterType];
-      if (activeFilters.length > 0) {
+
+      if (filterType === 'location' && activeFilters) {
+        // Aplica o filtro de location
+        filteredCharacters = filteredCharacters.filter(
+          (character) => character.location.name.toLowerCase() === activeFilters.toLowerCase(),
+        );
+      } else if (activeFilters.length > 0) {
+        // Aplica os demais filtros
         filteredCharacters = filteredCharacters.filter((character) =>
           activeFilters.includes(character[filterType].toLowerCase()),
         );
@@ -83,8 +85,10 @@ export const Home = () => {
   const handleLoadCharacters = useCallback(async () => {
     setIsLoading(true);
     const allLoadedCharacters = await loadCharacters();
+    const allLoadedLocations = await loadLocations();
     setAllCharacters(allLoadedCharacters);
     setCharacters(allLoadedCharacters);
+    setLocations(allLoadedLocations);
     setIsLoading(false);
   }, []);
 
@@ -137,44 +141,31 @@ export const Home = () => {
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
-      {/* Navbar */}
-      <Navbar updateFilters={updateFilters} handleThemeToggle={handleThemeToggle} dark={dark} isChecked={isChecked} />
+      <Navbar
+        updateFilters={updateFilters}
+        handleThemeToggle={handleThemeToggle}
+        dark={dark}
+        locations={locations}
+        isChecked={isChecked}
+        setIsChecked={setIsChecked}
+      />
       <Styled.Container>
-        <Styled.Menu>
-          <Styled.ToggleMenu $isChecked={isChecked}>
-            <label htmlFor="toggle">
-              {isChecked ? (
-                <IoClose size={45} color="var(--accent)" />
-              ) : (
-                <LuListFilter size={45} color="var(--accent)" />
-              )}
-            </label>
-            <input type="checkbox" id="toggle" checked={isChecked} onChange={(e) => setIsChecked(e.target.checked)} />
-          </Styled.ToggleMenu>
-          <button onClick={() => handleRandom(true)}>
-            <GiPerspectiveDiceSixFacesRandom size={55} color="var(--accent)" />
-          </button>
-        </Styled.Menu>
-        <Styled.Logo onClick={() => handleRandom(false)}>
-          <img src="/RickAndMortyCharacter/assets/portal.png" alt="R&M Portal" width="160" className="portal" />
-          <img src={dark ? rickPng : rickPng2} alt="logo" width="90" className="logo" />
-          <img src={rickSvg} alt="logo" width="160" className="title" />
-        </Styled.Logo>
-        {/* Barra de Pesquisa */}
+        <Menu handleRandom={handleRandom} isChecked={isChecked} setIsChecked={setIsChecked} />
+
         <Search placeholder="Search" value={searchValue} onChange={handleChange} onFocus="Type something..." />
 
-        {/* Conteúdo Principal */}
         {isLoading ? (
           <Styled.LoadingContainer>
             <Loading />
           </Styled.LoadingContainer>
         ) : currentCharacters.length > 0 ? (
           <Posts posts={currentCharacters} size={currentCharacters.length} />
-        ) : (
+        ) : searchValue ? (
           <Styled.Message>No results for: "{searchValue}"</Styled.Message>
+        ) : (
+          <Styled.Message>No characters match your filter criteria</Styled.Message>
         )}
 
-        {/* Paginação */}
         {!isLoading && (
           <>
             <Styled.ButtonContainer>
@@ -190,7 +181,6 @@ export const Home = () => {
           </>
         )}
       </Styled.Container>
-      {/* Footer */}
       <Footer />
     </ThemeProvider>
   );
